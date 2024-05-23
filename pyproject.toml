@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "sizemeup"
+version = "0.0.1"
+description = "A simple tool to determine the genome size of an organism"
+authors = [
+    "Robert A. Petit III <robbie.petit@gmail.com>",
+]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/rpetit3/sizemeup"
+repository = "https://github.com/rpetit3/sizemeup"
+keywords = ["bioinformatics", "genome size"]
+
+[tool.poetry.scripts]
+sizemeup = "sizemeup.cli.sizemeup:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+rich = "^13.7.1"
+rich-click = "^1.7.4"
+
+[tool.poetry.group.dev.dependencies]
+executor = "^23.2"
+flake8 = "^7.0.0"
+isort = "^5.13.2"
+black = "^24.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
