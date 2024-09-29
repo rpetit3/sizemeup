@@ -128,8 +128,8 @@ def sizemeup(
             logging.debug(f"Creating output directory: {outdir}")
             Path(outdir).mkdir(parents=True, exist_ok=True)
 
-            print(f"Writing the genome size to {prefix}-sizemeup.txt")
-            with open(f"{prefix}-sizemeup.txt", "w") as f:
+            print(f"Writing the genome size to {outdir}/{prefix}-sizemeup.txt")
+            with open(f"{outdir}/{prefix}-sizemeup.txt", "w") as f:
                 cols = ["name", "tax_id", "size", "source", "method"]
                 vals = [genome_sizes[lc_species][col] for col in cols]
                 f.write("\t".join(cols) + "\n")
