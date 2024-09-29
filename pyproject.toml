@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sizemeup"
-version = "0.0.1"
+version = "1.0.0"
 description = "A simple tool to determine the genome size of an organism"
 authors = [
     "Robert A. Petit III <robbie.petit@gmail.com>",
@@ -13,11 +13,13 @@ keywords = ["bioinformatics", "genome size"]
 
 [tool.poetry.scripts]
 sizemeup = "sizemeup.cli.sizemeup:main"
+sizemeup-build = "sizemeup.cli.build:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 rich = "^13.7.1"
 rich-click = "^1.7.4"
+requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 executor = "^23.2"

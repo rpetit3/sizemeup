@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+sizemup_dir=$(dirname $0)
+
+SIZEMEUP_SIZES="${sizemup_dir}/../share/sizemup/sizemup-sizes.txt" \
+    sizemeup-main \
+    "${@:1}"
