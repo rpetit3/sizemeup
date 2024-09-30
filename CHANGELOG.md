@@ -1,7 +1,7 @@
 
 # Changelog
 
-## v1.0.3 rpetit3/sizemeup "Straightedge" 2024/09/30
+## v1.1.0 rpetit3/sizemeup "Straightedge" 2024/09/30
 
 - allow querying of species name or taxid (replaces `--species` with `--query`)
 - Added `category` column to the output of `sizemeup`
