@@ -25,6 +25,7 @@ def parse_sizes_file(sizes_file: str) -> list:
         list: A list containing the genome sizes dictionary and the version string
     """
     genome_sizes = {}
+    taxid2name = {}
     version = None
     col_names = None
 
@@ -39,5 +40,6 @@ def parse_sizes_file(sizes_file: str) -> list:
                 vals = line.strip().split("\t")
                 row = dict(zip(col_names, vals))
                 genome_sizes[row["name"].lower()] = row
+                taxid2name[row["tax_id"]] = row["name"]
 
-    return [genome_sizes, version]
+    return [genome_sizes, taxid2name, version]

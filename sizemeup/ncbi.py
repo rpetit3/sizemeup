@@ -7,10 +7,20 @@ from pathlib import Path
 
 import requests
 
+NCBI_CATEGORY_IDS = {
+    "2": "bacteria",
+    "2157": "archaea",
+    "2759": "eukaryota",
+    "4751": "fungi",
+    "10239": "virus",
+    "12908": "unclassified",
+    "28384": "other",
+}
 
 NCBI_GENOME_SIZE_URL = (
     "https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/species_genome_size.txt.gz"
 )
+
 
 def get_genome_sizes(outdir: str, ncbi_api_key: str, chunk_size:int, force: bool) -> dict:
     """
@@ -23,13 +33,13 @@ def get_genome_sizes(outdir: str, ncbi_api_key: str, chunk_size:int, force: bool
 
     Column  1: species_taxid
     Taxonomic identifier of each species 
-    
+
     Column  2: min_ungapped_length
     Minimum expected ungapped genome size of an assembly for the species 
-    
+
     Column  3: max_ungapped_length
     Maximum expected ungapped genome size of an assembly for the species 
-    
+
     Column  4: expected_ungapped_length
     Median genome assembly size of assemblies for the species 
 
@@ -78,8 +88,9 @@ def get_genome_sizes(outdir: str, ncbi_api_key: str, chunk_size:int, force: bool
     logging.info(f"Found {len(genome_sizes)} genome sizes from NCBI")
     logging.info("Converting TaxIDs to species names")
     tax_names = taxid2name(list(genome_sizes.keys()), ncbi_api_key, chunk_size)
-    for taxid, name in tax_names.items():
-        genome_sizes[taxid]["name"] = name
+    for taxid, vals in tax_names.items():
+        genome_sizes[taxid]["name"] = vals["name"]
+        genome_sizes[taxid]["category"] = vals["category"]
 
     return genome_sizes
 
@@ -149,7 +160,7 @@ def taxid2name(taxids: list, ncbi_api_key: str, chunk_size: int) -> dict:
     logging.info(f"Converting {len(taxids)} TaxIDs to species names")
     logging.debug(f"Using NCBI API key: {ncbi_api_key}")
     tax_names = {}
-    url = "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/taxonomy/name_report"
+    url = "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/taxonomy"
     headers = {
         "accept": "application/json",
         "api-key": ncbi_api_key,
@@ -172,8 +183,18 @@ def taxid2name(taxids: list, ncbi_api_key: str, chunk_size: int) -> dict:
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         data = response.json()
-        for row in data['reports']:
-            tax_names[row["taxonomy"]["tax_id"]] = row["taxonomy"]["current_scientific_name"]["name"]
+        for row in data['taxonomy_nodes']:
+            tax_id = str(row["taxonomy"]["tax_id"])
+            tax_names[tax_id] = {
+                "name": row["taxonomy"]["organism_name"],
+                "category": "unknown",
+            }
+
+            matches = []
+            for id in NCBI_CATEGORY_IDS.keys():
+                if int(id) in row["taxonomy"]["lineage"]:
+                    matches.append(NCBI_CATEGORY_IDS[id])
+            tax_names[tax_id]["category"] = ",".join(matches)
 
     logging.info(f"Converted {len(tax_names)} TaxIDs to species names")
     return tax_names

@@ -113,7 +113,7 @@ def sizemeup_build(
             for line in f:
                 if line.startswith("#"):
                     continue
-                cols = ["name", "taxid", "expected_ungapped_length", "method_determined"]
+                cols = ["name", "taxid", "category", "expected_ungapped_length", "method_determined"]
                 vals = line.strip().split("\t")
                 taxid = vals[1]
                 user_genome_sizes[vals[1]] = dict(zip(cols, vals))
@@ -133,10 +133,10 @@ def sizemeup_build(
     # Write the genome sizes to a file
     logging.info(f"Writing genome sizes to {outdir}/sizemeup-sizes.txt")
     with open(f"{outdir}/sizemeup-sizes.txt", "w") as f:
-        f.write(f"# sizemeup-build {datetime.datetime.now().strftime('%Y.%m.%d')}")
-        f.write("name\ttax_id\tsize\tsource\tmethod\n")
+        f.write(f"# sizemeup-build {datetime.datetime.now().strftime('%Y.%m.%d')}\n")
+        f.write("name\ttax_id\tcategory\tsize\tsource\tmethod\n")
         for taxid, genome in genome_sizes.items():
-            f.write(f"{genome['name']}\t{taxid}\t{genome['expected_ungapped_length']}\t{genome['source']}\t{genome['method_determined']}\n")
+            f.write(f"{genome['name']}\t{taxid}\t{genome['category']}\t{genome['expected_ungapped_length']}\t{genome['source']}\t{genome['method_determined']}\n")
 
 
 def main():

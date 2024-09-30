@@ -23,7 +23,7 @@ click.rich_click.OPTION_GROUPS = {
         {
             "name": "Required Options",
             "options": [
-                "--species",
+                "--query",
                 "--sizes",
             ],
         },
@@ -45,10 +45,10 @@ click.rich_click.OPTION_GROUPS = {
 @click.command()
 @click.version_option(sizemeup.__version__, "--version", "-V")
 @click.option(
-    "--species",
-    "-s",
+    "--query",
+    "-q",
     required=True,
-    help="The species to determine the size of",
+    help="The species name or taxid to determine the size of",
 )
 @click.option(
     "--sizes",
@@ -77,7 +77,7 @@ click.rich_click.OPTION_GROUPS = {
 @click.option("--silent", is_flag=True, help="Only critical errors will be printed")
 @click.option("--verbose", is_flag=True, help="Increase the verbosity of output")
 def sizemeup(
-    species: str,
+    query: str,
     sizes: str,
     outdir: str,
     prefix: str,
@@ -99,9 +99,17 @@ def sizemeup(
     )
 
     if Path(sizes).exists():
-        genome_sizes, version = parse_sizes_file(sizes)
-        lc_species = species.lower()
+        genome_sizes, taxid2name, version = parse_sizes_file(sizes)
+        lc_species = None
+        if query.isdigit():
+            if query in taxid2name:
+                lc_species = taxid2name[query].lower()
+        else:
+            lc_species = query.lower()
+
+        logging.debug(f"Querying for {lc_species}")
         if lc_species in genome_sizes:
+            species = genome_sizes[lc_species]["name"]
             logging.info(f"Found the size of {species} in the sizes file")
             logging.info(genome_sizes[lc_species])
 
@@ -109,6 +117,7 @@ def sizemeup(
             table = Table(title="Query Result")
             table.add_column("Name", style="cyan", no_wrap=True)
             table.add_column("TaxID", style="magenta")
+            table.add_column("Category", style="red")
             table.add_column("Size", style="green")
             table.add_column("Source", style="blue")
             table.add_column("Method", style="yellow")
@@ -116,6 +125,7 @@ def sizemeup(
             table.add_row(
                 species,
                 genome_sizes[lc_species]["tax_id"],
+                genome_sizes[lc_species]["category"],
                 genome_sizes[lc_species]["size"],
                 genome_sizes[lc_species]["source"],
                 genome_sizes[lc_species]["method"],
@@ -130,12 +140,15 @@ def sizemeup(
 
             print(f"Writing the genome size to {outdir}/{prefix}-sizemeup.txt")
             with open(f"{outdir}/{prefix}-sizemeup.txt", "w") as f:
-                cols = ["name", "tax_id", "size", "source", "method"]
+                cols = ["name", "tax_id", "category", "size", "source", "method"]
                 vals = [genome_sizes[lc_species][col] for col in cols]
                 f.write("\t".join(cols) + "\n")
                 f.write("\t".join(vals) + "\n")
         else:
-            logging.error(f"""Could not find '{species}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this""")
+            if query.isdigit():
+                logging.error(f"Could not find the taxid '{query}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this")
+            else:
+                logging.error(f"Could not find '{query}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this")
     else:
         logging.error(f"Could not find the sizes file {sizes}")
         sys.exit(1)
