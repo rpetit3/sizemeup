@@ -2,7 +2,7 @@
 
 # `sizemeup`
 
-`sizemeup` is a simple tool to retrieve the genome size for a given species name. It utilizes
+`sizemeup` is a simple tool to retrieve the genome size for a given species name or tax ID. It utilizes
 known genome sizes available from [NCBI's Assembly Reports](https://ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/README_species_genome_size.txt)
 in combination with user provided genome sizes that may not be available from NCBI.
 
@@ -38,7 +38,7 @@ sizemeup --help
  sizemeup - A simple tool to determine the genome size of an organism
 
 ╭─ Required Options ────────────────────────────────────────────────────────────────────╮
-│ *  --species  -s  TEXT  The species to determine the size of [required]               │
+│ *  --query    -q  TEXT  The species name or taxid to determine the size of [required] │
 │ *  --sizes    -z  TEXT  The built in sizes file to use [required]                     │
 ╰───────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Additional Options ──────────────────────────────────────────────────────────────────╮
@@ -54,48 +54,39 @@ sizemeup --help
 #### Example
 
 ```bash
-sizemeup --species "Staphylococcus aureus" --silent
-                           Query Result
-┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┓
-┃ Name                  ┃ TaxID ┃ Size    ┃ Source ┃ Method       ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━┩
-│ Staphylococcus aureus │ 1280  │ 2800000 │ ncbi   │ manually-set │
-└───────────────────────┴───────┴─────────┴────────┴──────────────┘
-Writing the genome size to sizemeup-sizemeup.txt
+sizemeup --query "Staphylococcus aureus" --silent
+                                 Query Result                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Name                  ┃ TaxID ┃ Category ┃ Size    ┃ Source ┃ Method       ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ Staphylococcus aureus │ 1280  │ bacteria │ 2800000 │ ncbi   │ manually-set │
+└───────────────────────┴───────┴──────────┴─────────┴────────┴──────────────┘
+Writing the genome size to .//sizemeup-sizemeup.txt
 
-sizemeup --species "Escherichia coli" --silent
-                         Query Result
-┏━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┓
-┃ Name             ┃ TaxID ┃ Size    ┃ Source ┃ Method       ┃
-┡━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━┩
-│ Escherichia coli │ 562   │ 5150000 │ ncbi   │ manually-set │
-└──────────────────┴───────┴─────────┴────────┴──────────────┘
-Writing the genome size to sizemeup-sizemeup.txt
-
-sizemeup --species "escherichia coli" --silent
-                         Query Result
-┏━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┓
-┃ Name             ┃ TaxID ┃ Size    ┃ Source ┃ Method       ┃
-┡━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━┩
-│ escherichia coli │ 562   │ 5150000 │ ncbi   │ manually-set │
-└──────────────────┴───────┴─────────┴────────┴──────────────┘
-Writing the genome size to sizemeup-sizemeup.txt
+sizemeup --query 1280 --silent
+                                 Query Result                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Name                  ┃ TaxID ┃ Category ┃ Size    ┃ Source ┃ Method       ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ Staphylococcus aureus │ 1280  │ bacteria │ 2800000 │ ncbi   │ manually-set │
+└───────────────────────┴───────┴──────────┴─────────┴────────┴──────────────┘
+Writing the genome size to .//sizemeup-sizemeup.txt
 ```
 
-If the `--species` value is found a table is printed to STDOUT as well as to a file named
+If the `--query` value is found a table is printed to STDOUT as well as to a file named
 `{PREFIX}-sizemeup.txt` where `{PREFIX}` is the value of the `--prefix` option (_default sizemeup_).
 
 Here is an example of the output file:
 
 ```tsv
-name	tax_id	size	source	method
-Escherichia coli	562	5150000	ncbi	manually-set
+name	tax_id	category	size	source	method
+Staphylococcus aureus	1280	bacteria	2800000	ncbi	manually-set
 ```
 
 However is a species is not found, the following message is printed to STDOUT:
 
 ```bash
-sizemeup --species "escherichia colis" --silent
+sizemeup --query "escherichia colis" --silent
 2024-09-29 20:24:17 ERROR    2024-09-29 20:24:17:root:ERROR - Could not find 'escherichia colis' in the sizes file,      sizemeup.py:138
                              please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report
                              this
@@ -117,6 +108,7 @@ In the end, it produces a TSV file with the following columns:
 
 - `name` - the species name
 - `tax_id` - the NCBI tax id
+- `category` - the category of the species (e.g. `bacteria`, `virus`)
 - `size` - the genome size in base pairs
 - `source` - the source of the genome size (e.g. `ncbi`, `user`)
 - `method` - the method used to determine the genome size (e.g. `automatic`, `manual`)
