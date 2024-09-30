@@ -26,7 +26,7 @@ sizemeup --help
 
 ### `sizemeup`
 
-`sizemeup` is the main tool that outputs the known genome size for a given species name.
+`sizemeup` is the main tool that outputs the known genome size for a given species name or tax ID.
 
 #### Usage
 
