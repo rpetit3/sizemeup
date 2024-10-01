@@ -128,7 +128,7 @@ sample in order to calculate coverage and a few other metrics. Sure, we could ma
 the genome size for each sample, that would be tedious and time consuming. We decided to develop
 `sizemeup` to handle the looking up genome sizes for us. In addition this paves the way for
 users of Bactopia to use `teton` + `sizemeup` to easily mix species within their runs. In other
-words, `siuzemeup` was built to support the Bactopia workflow (_but you can use it for whatever!_).
+words, `sizemeup` was built to support the Bactopia workflow (_but you can use it for whatever!_).
 
 As for the name, I wanted something fun and catchy. It's a simple tool to retrieve the genome
 size of a given species name, so, I thought "sizemeup" would work!
