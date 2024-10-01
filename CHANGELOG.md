@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v1.1.1 rpetit3/sizemeup "Marking Gauge" 2024/09/30
+
+- produce output for a negative result when no species is found
+
 ## v1.1.0 rpetit3/sizemeup "Straightedge" 2024/09/30
 
 - allow querying of species name or taxid (replaces `--species` with `--query`)

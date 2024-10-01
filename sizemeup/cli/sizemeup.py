@@ -98,6 +98,16 @@ def sizemeup(
         logging.ERROR if silent else logging.DEBUG if verbose else logging.INFO
     )
 
+    # Final Output
+    final_output = {
+        "name": "UNKNOWN_SPECIES",
+        "tax_id": "UNKNOWN_TAXID",
+        "category": "UNKNOWN_CATEGORY",
+        "size": "0",
+        "source": "UNKNOWN_SOURCE",
+        "method": "UNKNOWN_METHOD",
+    }
+
     if Path(sizes).exists():
         genome_sizes, taxid2name, version = parse_sizes_file(sizes)
         lc_species = None
@@ -113,37 +123,12 @@ def sizemeup(
             logging.info(f"Found the size of {species} in the sizes file")
             logging.info(genome_sizes[lc_species])
 
-            # Create a table to display the genome sizes
-            table = Table(title="Query Result")
-            table.add_column("Name", style="cyan", no_wrap=True)
-            table.add_column("TaxID", style="magenta")
-            table.add_column("Category", style="red")
-            table.add_column("Size", style="green")
-            table.add_column("Source", style="blue")
-            table.add_column("Method", style="yellow")
-
-            table.add_row(
-                species,
-                genome_sizes[lc_species]["tax_id"],
-                genome_sizes[lc_species]["category"],
-                genome_sizes[lc_species]["size"],
-                genome_sizes[lc_species]["source"],
-                genome_sizes[lc_species]["method"],
-            )
-
-            print(table)
-
-            # write the genome size to a file
-            # Create the output directory
-            logging.debug(f"Creating output directory: {outdir}")
-            Path(outdir).mkdir(parents=True, exist_ok=True)
-
-            print(f"Writing the genome size to {outdir}/{prefix}-sizemeup.txt")
-            with open(f"{outdir}/{prefix}-sizemeup.txt", "w") as f:
-                cols = ["name", "tax_id", "category", "size", "source", "method"]
-                vals = [genome_sizes[lc_species][col] for col in cols]
-                f.write("\t".join(cols) + "\n")
-                f.write("\t".join(vals) + "\n")
+            final_output['name'] = species
+            final_output['tax_id'] = genome_sizes[lc_species]["tax_id"]
+            final_output['category'] = genome_sizes[lc_species]["category"]
+            final_output['size'] = genome_sizes[lc_species]["size"]
+            final_output['source'] = genome_sizes[lc_species]["source"]
+            final_output['method'] = genome_sizes[lc_species]["method"]
         else:
             if query.isdigit():
                 logging.error(f"Could not find the taxid '{query}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this")
@@ -152,6 +137,39 @@ def sizemeup(
     else:
         logging.error(f"Could not find the sizes file {sizes}")
         sys.exit(1)
+
+    # Create a table to display the genome sizes
+    table = Table(title="Query Result")
+    table.add_column("Name", style="cyan", no_wrap=True)
+    table.add_column("TaxID", style="magenta")
+    table.add_column("Category", style="red")
+    table.add_column("Size", style="green")
+    table.add_column("Source", style="blue")
+    table.add_column("Method", style="yellow")
+
+    table.add_row(
+        final_output["name"],
+        final_output["tax_id"],
+        final_output["category"],
+        final_output["size"],
+        final_output["source"],
+        final_output["method"],
+    )
+
+    print(table)
+
+    # write the genome size to a file
+    # Create the output directory
+    logging.debug(f"Creating output directory: {outdir}")
+    Path(outdir).mkdir(parents=True, exist_ok=True)
+
+    print(f"Writing the genome size to {outdir}/{prefix}-sizemeup.txt")
+    with open(f"{outdir}/{prefix}-sizemeup.txt", "w") as f:
+        cols = ["name", "tax_id", "category", "size", "source", "method"]
+        vals = [final_output[col] for col in cols]
+        f.write("\t".join(cols) + "\n")
+        f.write("\t".join(vals) + "\n")
+
 
 def main():
     if len(sys.argv) == 1:
