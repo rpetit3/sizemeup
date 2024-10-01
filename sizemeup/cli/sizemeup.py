@@ -108,12 +108,25 @@ def sizemeup(
         "method": "UNKNOWN_METHOD",
     }
 
+    final_query = query
     if Path(sizes).exists():
         genome_sizes, taxid2name, version = parse_sizes_file(sizes)
         lc_species = None
         if query.isdigit():
             if query in taxid2name:
                 lc_species = taxid2name[query].lower()
+        elif Path(query).is_file():
+            """
+            This is meant to be used with Bactopia's '*.bracken.classification.txt' file.
+
+            It a two line TSV file with headers ('name','classification'), and we will use
+            the 'classification' column from line 2 as the query.
+            """
+            logging.debug(f"Extracting query from {query}")
+            with open(query, "r") as f:
+                f.readline()
+                final_query = f.readline().strip().split("\t")[1]
+                lc_species = final_query.lower()
         else:
             lc_species = query.lower()
 
@@ -131,9 +144,9 @@ def sizemeup(
             final_output['method'] = genome_sizes[lc_species]["method"]
         else:
             if query.isdigit():
-                logging.error(f"Could not find the taxid '{query}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this")
+                logging.error(f"Could not find the taxid '{final_query}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this")
             else:
-                logging.error(f"Could not find '{query}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this")
+                logging.error(f"Could not find '{final_query}' in the sizes file, please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report this")
     else:
         logging.error(f"Could not find the sizes file {sizes}")
         sys.exit(1)

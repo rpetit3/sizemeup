@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v1.2.0 rpetit3/sizemeup "Calipers" 2024/10/01
+
+- allow `query` to be a file from Bactopia
+
 ## v1.1.1 rpetit3/sizemeup "Marking Gauge" 2024/09/30
 
 - produce output for a negative result when no species is found
