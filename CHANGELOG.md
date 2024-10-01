@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v1.2.2 rpetit3/sizemeup "Mile" 2024/10/01
+
+- update poetry lock file
+
 ## v1.2.1 rpetit3/sizemeup "Micrometer" 2024/10/01
 
 - loosen python pinning

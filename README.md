@@ -83,13 +83,20 @@ name	tax_id	category	size	source	method
 Staphylococcus aureus	1280	bacteria	2800000	ncbi	manually-set
 ```
 
-However is a species is not found, the following message is printed to STDOUT:
+However is a species is not found, the you get the following output:
 
 ```bash
 sizemeup --query "escherichia colis" --silent
 2024-09-29 20:24:17 ERROR    2024-09-29 20:24:17:root:ERROR - Could not find 'escherichia colis' in the sizes file,      sizemeup.py:138
                              please consider creating an issue at https://github.com/rpetit3/sizemeup/issues to report
                              this
+                                         Query Result
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ Name            ┃ TaxID         ┃ Category         ┃ Size ┃ Source         ┃ Method         ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ UNKNOWN_SPECIES │ UNKNOWN_TAXID │ UNKNOWN_CATEGORY │ 0    │ UNKNOWN_SOURCE │ UNKNOWN_METHOD │
+└─────────────────┴───────────────┴──────────────────┴──────┴────────────────┴────────────────┘
+Writing the genome size to .//sizemeup-sizemeup.txt
 ```
 
 ### `sizemeup-build`
