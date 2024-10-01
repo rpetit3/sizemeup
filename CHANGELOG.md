@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v1.2.1 rpetit3/sizemeup "Micrometer" 2024/10/01
+
+- loosen python pinning
+
 ## v1.2.0 rpetit3/sizemeup "Calipers" 2024/10/01
 
 - allow `query` to be a file from Bactopia
