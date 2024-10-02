@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v1.2.3 rpetit3/sizemeup "Gauge" 2024/10/02
+
+- adjust python pinnings
+
 ## v1.2.2 rpetit3/sizemeup "Mile" 2024/10/01
 
 - update poetry lock file
