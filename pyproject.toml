@@ -20,13 +20,13 @@ python = "^3.8.1"
 rich = "^13.7.1"
 rich-click = "^1.7.4"
 requests = "^2.32.3"
-bactopia = "^1.2.1"
 
 [tool.poetry.group.dev.dependencies]
 executor = "^23.2"
 flake8 = "^7.0.0"
 isort = "^5.13.2"
 black = "^24.4.0"
+bactopia = "^1.2.1"
 
 [build-system]
 requires = ["poetry-core"]
