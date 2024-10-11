@@ -107,6 +107,8 @@ this it:
 1. Downloads the latest NCBI Assembly Reports
 2. Determines species names based on tax id using NCBI Datasets API
 3. Merges any user provided genome sizes not available from NCBI
+4. Add assembly sizes from [ATB](https://allthebacteria.readthedocs.io/en/latest/) with sufficient representation
+5. Writes the genome sizes to a TSV file
 
 **Note**: This tool isn't necessary for most users, just a simple way to update the database
 on your own or at new releases of `sizemeup`.
@@ -125,6 +127,9 @@ If you make use of `sizemeup` in your analysis, please cite the following:
 
 - __sizemeup__  
 _Petit III RA, Fearing T, Rowley, C [sizemeup: A simple tool to determine the genome size of an organism](https://github.com/rpetit3/sizemeup) (GitHub)_  
+
+_ __AllTheBacteria__  
+_Hunt M., Lima L., Shen W., Lees J., Iqbal Z. [AllTheBacteria - all bacterial genomes assembled, available and searchable](https://doi.org/10.1101/2024.03.08.584059) bioRxiv 2024.03.08.584059_  
 
 ## Motivation and Naming
 

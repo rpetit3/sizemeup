@@ -198,3 +198,83 @@ def taxid2name(taxids: list, ncbi_api_key: str, chunk_size: int) -> dict:
 
     logging.info(f"Converted {len(tax_names)} TaxIDs to species names")
     return tax_names
+
+
+def species2taxid(species: list, ncbi_api_key: str, chunk_size: int) -> dict:
+    """
+    Convert a list of NCBI TaxIDs to species names.
+
+    For this query we will use NCBI Datasets v2 API
+    Docs: https://www.ncbi.nlm.nih.gov/datasets/docs/v2/reference-docs/rest-api/
+
+    For this we will query the following endpoint:
+    https://api.ncbi.nlm.nih.gov/datasets/v2alpha/taxonomy/name_report
+
+    It expects the query to be delivered via POST with the following JSON payload:
+    {
+        "taxons": [
+            "1280",
+            "1281"
+        ],
+        "returned_content": "METADATA",
+        "page_size": 1000,
+        "include_tabular_header": "INCLUDE_TABULAR_HEADER_FIRST_PAGE_ONLY",
+        "page_token": "string",
+        "table_format": "SUMMARY",
+        "children": false,
+        "ranks": [
+            "SPECIES"
+        ]
+    }
+
+    The query will then include the following headers:
+        accept: application/json
+        api-key: ncbi-api-key
+        content-type: application/json
+
+    NCBI will only allow a maximum for 1000 taxids per query, so we will need to
+    split the list into chunks of a user defined size.
+
+    Args:
+        taxids (list): A list of NCBI TaxIDs
+        ncbi_api_key (str): The API key to use for the NCBI API
+        chunk_size (int): The size of the chunks to split the list into
+
+    Returns:
+        dict: A dictionary of TaxIDs and species names
+    """
+    logging.info(f"Converting {len(species)} species names to TaxIDs")
+    logging.debug(f"Using NCBI API key: {ncbi_api_key}")
+    tax_ids = {}
+    url = "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/taxonomy"
+    headers = {
+        "accept": "application/json",
+        "api-key": ncbi_api_key,
+        "content-type": "application/json",
+    }
+    species_chunks = list(batched(species, chunk_size))
+    for i, chunk in enumerate(species_chunks):
+        logging.debug(f"Processing chunk {i} of {len(species_chunks)}")
+        payload = {
+            "taxons": chunk,
+            "returned_content": "METADATA",
+            "page_size": 1000,
+            "include_tabular_header": "INCLUDE_TABULAR_HEADER_FIRST_PAGE_ONLY",
+            "page_token": "string",
+            "table_format": "SUMMARY",
+            "children": False,
+            "ranks": ["SPECIES"],
+        }
+
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        data = response.json()
+        for row in data['taxonomy_nodes']:
+            if "taxonomy" in row:
+                tax_id = str(row["taxonomy"]["tax_id"])
+                name = row["taxonomy"]["organism_name"]
+                tax_ids[name] = tax_id
+
+    logging.info(f"Converted {len(tax_ids)} species names to TaxIDs")
+    return tax_ids
+

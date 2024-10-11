@@ -1,6 +1,10 @@
 
 # Changelog
 
+## v1.3.0 rpetit3/sizemeup "String" 2024/10/10
+
+- Add rough genome sizes from ATB assemblies for species with sufficient representation
+
 ## v1.2.3 rpetit3/sizemeup "Gauge" 2024/10/02
 
 - adjust python pinnings
