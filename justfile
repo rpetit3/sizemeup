@@ -20,6 +20,10 @@ lint:
 install:
     poetry install --no-interaction
 
+# install latest version with poetry for CI
+install-ci:
+    poetry install --no-interaction --without dev
+
 # check formatting, linting, and tests
 check: check-fmt lint
 

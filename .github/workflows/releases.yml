@@ -28,7 +28,7 @@ jobs:
       - name: Install project
         run: |
           python -m pip install -U pip
-          just install
+          just install-ci
       - name: Build a binary wheel and a source tarball
         run: just build
       - name: Publish to PyPI
